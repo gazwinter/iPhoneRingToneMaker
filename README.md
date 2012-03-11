@@ -4,17 +4,20 @@
 
 iPhoneRingToneMaker is an application created in C# to take file and convert it into a valid iPhone ringtone.
 
-Currently it will only support downloading a song from youtube and turning it into a ring tone, but I hope to be able to convert other formats into ringtones at some point.
+Choose an MP3 file from your PC and it will convert it into a valid iPhone ringtone. (Currently by using the first 30 seconds of the track)
 
 ## Features
 
 ### YouTube converter
 
-iPhoneRingToneMaker takes a specified YouTube video, downloads it and converts it into an aac format.
+iPhoneRingToneMaker takes a specified YouTube video, downloads it and converts it to MP3 (This has been removed temporarily.
 
 ## Requirements
- •	.NET Framework 4.0
- •	[YouTubeExtractor](https://github.com/flagbug/YoutubeExtractor) developed by [flagbug](https://github.com/flagbug)
+ •	.NET Framework 4.0;
+ 
+ •	[YouTubeExtractor](https://github.com/flagbug/YoutubeExtractor) developed by [flagbug](https://github.com/flagbug);
+ 
+ •	iTunes 7+;
  
 ## Development
 
