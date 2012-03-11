@@ -18,6 +18,7 @@ namespace iPhoneRingtoneMaker
     public partial class iPhoneRingtoneMaker : Form
     {
         public static string folder = null;
+        public iTunesApp itunes = new iTunesApp(); //Create instance of Itunes App
 
         public iPhoneRingtoneMaker()
         {
@@ -43,14 +44,9 @@ namespace iPhoneRingtoneMaker
 
         private void btnCreate_Click(object sender, EventArgs e)
         {
-            //TODO: Split into a smaller functions
-
-            //Create an instance of iTunes
-            iTunesApp itunes = new iTunesApp();
             string songfile = null;
 
-            // create a new playList
-            IITUserPlaylist newPlayList = (IITUserPlaylist)itunes.CreatePlaylist("Temp");
+            createPlaylist();   //Create a temporary playlist in iTunes
 
             // search for a certain playlist
             IITUserPlaylist playListImSearchingFor = null;
@@ -66,17 +62,30 @@ namespace iPhoneRingtoneMaker
 
             //Trim selected MP3 by setting the start and end times
             //At the moment it is just taking the first 30 seconds.
-            //TODO: Enable manual choice of start and end times, as long as it is 40 seconds or less.
             IITTrack track = playListImSearchingFor.Tracks[1];
-            track.Start = 0;
-            track.Finish = 30;
+            txtTotalLength.Text = Convert.ToString(track.Time);
+            //int length = Convert.ToInt32(txtTotalLength.Text);
+
+            //TODO: Fix Error checking
+           // if (length > 0)
+            //{
+                track.Start = Convert.ToInt32(txtStartTime.Text);
+                track.Finish = Convert.ToInt32(txtEndTime.Text);
+          //  }
+
+          /*  if (!((track.Start < length) && (track.Finish < length)))
+            {
+                track.Start = 0;
+                track.Finish = 30;
+                MessageBox.Show("Invalid times were entered, therefore we will only take the first 30 seconds from the song!", "Invalid Time", MessageBoxButtons.OK, MessageBoxIcon.Error);
+            }*/
 
             string trackname = null;
             var result = itunes.ConvertFile2(songfile);
             trackname = result.trackName;
             while (result.InProgress)
             {
-                
+                //Something needs to go here!
             }
             trackname += ".m4a";
 
@@ -92,21 +101,38 @@ namespace iPhoneRingtoneMaker
             playListImSearchingFor.Delete();
 
             //Copy File to chosen output Directory
+
+            //If the file already exists, delete it!
+            if(File.Exists(txtOutputDirectory.Text + trackname))
+            {
+                File.Delete(txtOutputDirectory.Text + trackname);
+            }
+            
             File.Move(files[0].ToString(), txtOutputDirectory.Text + trackname);
 
             string trackname2 = trackname.Replace(".m4a", ".m4r");
-
             string renamed = txtOutputDirectory.Text + trackname2;
 
             //Rename File
+            //If the file already exists, delete it!
+            if (File.Exists(renamed))
+            {
+                File.Delete(renamed);
+            }
+
+            //Copy File
             File.Move(txtOutputDirectory.Text + trackname, renamed);
 
             //Move File
             string newLocation = files[0].ToString();
             int last = newLocation.LastIndexOf("\\") + 1;
             newLocation = newLocation.Remove(last);
-
             newLocation = newLocation + trackname2;
+
+            if(File.Exists(newLocation))
+            {
+                File.Delete(newLocation);
+            }
             File.Move(renamed, newLocation);
 
             //Close iTunes again
@@ -124,6 +150,61 @@ namespace iPhoneRingtoneMaker
             {
                 txtChosenFile.Text = openFileDlg.FileName;
             }
+        }
+
+        private void txtEndTimeTextChanged(object sender, EventArgs e)
+        {
+            int start, end;
+            start = Convert.ToInt32(txtStartTime.Text);
+            end = Convert.ToInt32(txtEndTime.Text);
+
+            if (start < end)
+            {
+                if ((end - start) > 40)
+                {
+                    end = start + 30;
+                    txtEndTime.Text = Convert.ToString(end);
+                    MessageBox.Show("End Time is more than 40 seconds after the start time. This has now been set to 30 seconds after the start.", "Invalid End Time", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                }
+            }
+            else
+            {
+                end = start + 30;
+                txtEndTime.Text = Convert.ToString(end);
+                MessageBox.Show("End Time must be greater than the start time! End Time has been set to 30 seconds after the start time.", "Invalid End Time", MessageBoxButtons.OK, MessageBoxIcon.Error);
+            }
+        }
+
+        public void createPlaylist()
+        {
+            // create a new playList
+            IITUserPlaylist newPlayList = (IITUserPlaylist)itunes.CreatePlaylist("Temp");
+        }
+
+        public void createPlaylist(string name)
+        {
+            // create a new playList
+            IITUserPlaylist newPlayList = (IITUserPlaylist)itunes.CreatePlaylist(name);
+        }
+
+        private void txtStartTime_TextChanged(object sender, EventArgs e)
+        {
+            int start, end;
+            start = Convert.ToInt32(txtStartTime.Text);
+            end = Convert.ToInt32(txtEndTime.Text);
+
+            if (start < 0)
+            {
+                start = 0;
+            }
+
+            if (start > end)
+            {
+                end = start + 30;
+            }
+
+            txtStartTime.Text = Convert.ToString(start);
+            txtEndTime.Text = Convert.ToString(end);
         }
     }
 }
