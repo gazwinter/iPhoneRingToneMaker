@@ -109,14 +109,11 @@ namespace iPhoneRingtoneMaker
             newLocation = newLocation + trackname2;
             File.Move(renamed, newLocation);
 
-            //Open File
-            //TODO: Fix bug here, its not currently importing the file.
-            var file = File.Open(newLocation, FileMode.Open);
-            file.Close();
-
-
             //Close iTunes again
             itunes.Quit();
+
+            //Open File to import into iTunes
+            Process.Start(newLocation);            
         }
 
         private void btnChooseFile_Click(object sender, EventArgs e)
