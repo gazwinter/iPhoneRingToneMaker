@@ -31,14 +31,13 @@
             this.btnOutputDir = new System.Windows.Forms.Button();
             this.txtOutputDirectory = new System.Windows.Forms.TextBox();
             this.btnCreate = new System.Windows.Forms.Button();
-            this.lblYouTubeURL = new System.Windows.Forms.Label();
-            this.txtYouTubeURL = new System.Windows.Forms.TextBox();
-            this.btnSubmit = new System.Windows.Forms.Button();
+            this.btnChooseFile = new System.Windows.Forms.Button();
+            this.txtChosenFile = new System.Windows.Forms.TextBox();
             this.SuspendLayout();
             // 
             // btnOutputDir
             // 
-            this.btnOutputDir.Location = new System.Drawing.Point(31, 53);
+            this.btnOutputDir.Location = new System.Drawing.Point(21, 55);
             this.btnOutputDir.Name = "btnOutputDir";
             this.btnOutputDir.Size = new System.Drawing.Size(103, 23);
             this.btnOutputDir.TabIndex = 2;
@@ -48,14 +47,14 @@
             // 
             // txtOutputDirectory
             // 
-            this.txtOutputDirectory.Location = new System.Drawing.Point(156, 55);
+            this.txtOutputDirectory.Location = new System.Drawing.Point(157, 57);
             this.txtOutputDirectory.Name = "txtOutputDirectory";
             this.txtOutputDirectory.Size = new System.Drawing.Size(323, 20);
             this.txtOutputDirectory.TabIndex = 3;
             // 
             // btnCreate
             // 
-            this.btnCreate.Location = new System.Drawing.Point(34, 131);
+            this.btnCreate.Location = new System.Drawing.Point(22, 86);
             this.btnCreate.Name = "btnCreate";
             this.btnCreate.Size = new System.Drawing.Size(100, 23);
             this.btnCreate.TabIndex = 6;
@@ -63,41 +62,31 @@
             this.btnCreate.UseVisualStyleBackColor = true;
             this.btnCreate.Click += new System.EventHandler(this.btnCreate_Click);
             // 
-            // lblYouTubeURL
+            // btnChooseFile
             // 
-            this.lblYouTubeURL.AutoSize = true;
-            this.lblYouTubeURL.Location = new System.Drawing.Point(32, 12);
-            this.lblYouTubeURL.Name = "lblYouTubeURL";
-            this.lblYouTubeURL.Size = new System.Drawing.Size(79, 13);
-            this.lblYouTubeURL.TabIndex = 7;
-            this.lblYouTubeURL.Text = "YouTube URL:";
+            this.btnChooseFile.Location = new System.Drawing.Point(21, 26);
+            this.btnChooseFile.Name = "btnChooseFile";
+            this.btnChooseFile.Size = new System.Drawing.Size(75, 23);
+            this.btnChooseFile.TabIndex = 10;
+            this.btnChooseFile.Text = "Choose File";
+            this.btnChooseFile.UseVisualStyleBackColor = true;
+            this.btnChooseFile.Click += new System.EventHandler(this.btnChooseFile_Click);
             // 
-            // txtYouTubeURL
+            // txtChosenFile
             // 
-            this.txtYouTubeURL.Location = new System.Drawing.Point(156, 13);
-            this.txtYouTubeURL.Name = "txtYouTubeURL";
-            this.txtYouTubeURL.Size = new System.Drawing.Size(323, 20);
-            this.txtYouTubeURL.TabIndex = 8;
-            this.txtYouTubeURL.Text = "URL goes here!";
-            // 
-            // btnSubmit
-            // 
-            this.btnSubmit.Location = new System.Drawing.Point(486, 9);
-            this.btnSubmit.Name = "btnSubmit";
-            this.btnSubmit.Size = new System.Drawing.Size(75, 23);
-            this.btnSubmit.TabIndex = 9;
-            this.btnSubmit.Text = "Submit";
-            this.btnSubmit.UseVisualStyleBackColor = true;
-            this.btnSubmit.Click += new System.EventHandler(this.btnSubmit_Click);
+            this.txtChosenFile.Location = new System.Drawing.Point(156, 28);
+            this.txtChosenFile.Name = "txtChosenFile";
+            this.txtChosenFile.ReadOnly = true;
+            this.txtChosenFile.Size = new System.Drawing.Size(323, 20);
+            this.txtChosenFile.TabIndex = 11;
             // 
             // iPhoneRingtoneMaker
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(569, 481);
-            this.Controls.Add(this.btnSubmit);
-            this.Controls.Add(this.txtYouTubeURL);
-            this.Controls.Add(this.lblYouTubeURL);
+            this.Controls.Add(this.txtChosenFile);
+            this.Controls.Add(this.btnChooseFile);
             this.Controls.Add(this.btnCreate);
             this.Controls.Add(this.txtOutputDirectory);
             this.Controls.Add(this.btnOutputDir);
@@ -113,9 +102,8 @@
         private System.Windows.Forms.Button btnOutputDir;
         private System.Windows.Forms.TextBox txtOutputDirectory;
         private System.Windows.Forms.Button btnCreate;
-        private System.Windows.Forms.Label lblYouTubeURL;
-        private System.Windows.Forms.TextBox txtYouTubeURL;
-        private System.Windows.Forms.Button btnSubmit;
+        private System.Windows.Forms.Button btnChooseFile;
+        private System.Windows.Forms.TextBox txtChosenFile;
     }
 }
 

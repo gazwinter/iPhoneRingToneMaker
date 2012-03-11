@@ -9,7 +9,8 @@ using System.Linq;
 using System.Text;
 using System.Web;
 using System.Windows.Forms;
-using YoutubeExtractor;
+
+using iTunesLib;
 
 
 namespace iPhoneRingtoneMaker
@@ -35,64 +36,97 @@ namespace iPhoneRingtoneMaker
 
             if (outputFolder.ShowDialog() == DialogResult.OK)
             {
-                txtOutputDirectory.Text = outputFolder.SelectedPath.ToString();
+                txtOutputDirectory.Text = outputFolder.SelectedPath.ToString() + "\\";
                 folder = txtOutputDirectory.Text;
             }
         }
 
         private void btnCreate_Click(object sender, EventArgs e)
         {
-            //TODO: ONCE File exists manipulate it until it can be used as a ringtone.
-     
+            //TODO: Split into a smaller functions
+
+            //Create an instance of iTunes
+            iTunesApp itunes = new iTunesApp();
+            string songfile = null;
+
+            // create a new playList
+            IITUserPlaylist newPlayList = (IITUserPlaylist)itunes.CreatePlaylist("Temp");
+
+            // search for a certain playlist
+            IITUserPlaylist playListImSearchingFor = null;
+            foreach (IITPlaylist pl in itunes.LibrarySource.Playlists)
+            {
+                if (pl.Name.Equals("Temp"))
+                {
+                    playListImSearchingFor = (IITUserPlaylist)pl;
+                    songfile = txtChosenFile.Text;
+                    playListImSearchingFor.AddFile(songfile); // add a song to that playlist
+                }
+            }
+
+            //Trim selected MP3 by setting the start and end times
+            //At the moment it is just taking the first 30 seconds.
+            //TODO: Enable manual choice of start and end times, as long as it is 40 seconds or less.
+            IITTrack track = playListImSearchingFor.Tracks[1];
+            track.Start = 0;
+            track.Finish = 30;
+
+            string trackname = null;
+            var result = itunes.ConvertFile2(songfile);
+            trackname = result.trackName;
+            while (result.InProgress)
+            {
+                
+            }
+            trackname += ".m4a";
+
+            //Find iTunes Directory
+            string userDirectory = Environment.GetFolderPath(Environment.SpecialFolder.Personal);
+            userDirectory = userDirectory.Replace("Documents", "Music");
+            userDirectory = userDirectory.TrimEnd();
+
+            //Find the newly created file
+            string[] files = Directory.GetFiles(userDirectory, "*"+trackname, SearchOption.AllDirectories);
+            
+            //Delete Playlist
+            playListImSearchingFor.Delete();
+
+            //Copy File to chosen output Directory
+            File.Move(files[0].ToString(), txtOutputDirectory.Text + trackname);
+
+            string trackname2 = trackname.Replace(".m4a", ".m4r");
+
+            string renamed = txtOutputDirectory.Text + trackname2;
+
+            //Rename File
+            File.Move(txtOutputDirectory.Text + trackname, renamed);
+
+            //Move File
+            string newLocation = files[0].ToString();
+            int last = newLocation.LastIndexOf("\\") + 1;
+            newLocation = newLocation.Remove(last);
+
+            newLocation = newLocation + trackname2;
+            File.Move(renamed, newLocation);
+
+            //Open File
+            //TODO: Fix bug here, its not currently importing the file.
+            var file = File.Open(newLocation, FileMode.Open);
+            file.Close();
+
+
+            //Close iTunes again
+            itunes.Quit();
         }
 
-      
-
-        private void btnSubmit_Click(object sender, EventArgs e)
+        private void btnChooseFile_Click(object sender, EventArgs e)
         {
-            string link = txtYouTubeURL.Text;
+            OpenFileDialog openFileDlg = new OpenFileDialog();
 
-            //TODO: Get YouTubeExtractor to work on a background thread
-
-            /*
-             * Get the available video formats.
-             * We'll work with them in the video and audio download examples.
-             */
-            IEnumerable<VideoInfo> videoInfos = DownloadUrlResolver.GetDownloadUrls(link);
-            DownloadAudio(videoInfos);
-        }
-
-        private static void DownloadAudio(IEnumerable<VideoInfo> videoInfos)
-        {
-            /*
-             * We want the first flash (only flash audio extraction is currently supported)
-             * video with the highest audio quality.
-             * See the VideoFormat enum for more info about the quality.
-             */
-            VideoInfo video = videoInfos
-                .Where(info => info.CanExtractAudio)
-                .First(info =>
-                       info.VideoFormat == VideoFormat.FlashAacHighQuality ||
-                       info.VideoFormat == VideoFormat.FlashAacLowQuality ||
-                       info.VideoFormat == VideoFormat.FlashMp3HighQuality ||
-                       info.VideoFormat == VideoFormat.FlashMp3LowQuality);
-
-            /*
-             * Create the audio downloader.
-             * The first argument is the video where the audio should be extracted from.
-             * The second argument is the path to save the audio file.
-             * Automatic video title infering will be supported later.
-             */
-            var audioDownloader = new AudioDownloader(video, folder + "\\test" + video.AudioExtension);
-
-            // Register the ProgressChanged event and print the current progress
-            //audioDownloader.ProgressChanged += (sender, args) => Debug.WriteLine(args.ProgressPercentage);
-
-            /*
-             * Execute the audio downloader.
-             * For GUI applications note, that this method runs synchronously.
-             */
-            audioDownloader.Execute();
+            if (openFileDlg.ShowDialog() == DialogResult.OK)
+            {
+                txtChosenFile.Text = openFileDlg.FileName;
+            }
         }
     }
 }
