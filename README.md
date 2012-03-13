@@ -10,7 +10,13 @@ Choose an MP3 file from your PC and it will convert it into a valid iPhone ringt
 
 ### YouTube converter
 
-iPhoneRingToneMaker takes a specified YouTube video, downloads it and converts it to MP3 (This has been removed temporarily.
+iPhoneRingToneMaker takes a specified YouTube video, downloads it and converts it to MP3.
+Currently there is a small problem with this. You need to manually edit the MP3 title, artist etc.
+This currently saves a file called extracted.mp3 to a folder on the users desktop called temp.
+
+### Ringtone Creation
+
+This requires iTunes to be installed. The program will open an MP3 file, convert it using iTunes to the M4a format, then turn it into a 30 second iPhone tone. You will need to sync your iPhone with iTunes once the ringtone is created.
 
 ## Requirements
  •	.NET Framework 4.0;
@@ -21,4 +27,4 @@ iPhoneRingToneMaker takes a specified YouTube video, downloads it and converts i
  
 ## Development
 
-iPhoneRingToneMaker is currently in a very early stage of development and has to be compiled from the source code, at the moment it doesnt have most of the functionality.
+iPhoneRingToneMaker is currently has to be compiled from the source code. Once all the bugs are ironed out i will create an installer.
