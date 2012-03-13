@@ -11,7 +11,7 @@ using System.Web;
 using System.Windows.Forms;
 
 using iTunesLib;
-
+using YoutubeExtractor;
 
 namespace iPhoneRingtoneMaker
 {
@@ -19,6 +19,9 @@ namespace iPhoneRingtoneMaker
     {
         public static string folder = null;
         public iTunesApp itunes = new iTunesApp(); //Create instance of Itunes App
+        VideoInfo video = null;
+
+        delegate void updatePercentageCallback(double percentage);
 
         public iPhoneRingtoneMaker()
         {
@@ -205,6 +208,90 @@ namespace iPhoneRingtoneMaker
 
             txtStartTime.Text = Convert.ToString(start);
             txtEndTime.Text = Convert.ToString(end);
+        }
+
+        private void btnChooseDir_Click(object sender, EventArgs e)
+        {
+            FolderBrowserDialog browse = new FolderBrowserDialog();
+
+            browse.RootFolder = Environment.SpecialFolder.Desktop;
+
+            if (browse.ShowDialog() == DialogResult.OK)
+            {
+                txtMP3Path.Text = browse.SelectedPath.ToString();
+            }
+        }
+
+        private void btnCreateMP3_Click(object sender, EventArgs e)
+        {
+            // Our test youtube link
+            string link = txtYouTubeURL.Text;
+
+            /*
+             * Get the available video formats.
+             * We'll work with them in the video and audio download examples.
+             */
+            IEnumerable<VideoInfo> videoInfos = DownloadUrlResolver.GetDownloadUrls(link);
+
+            /*
+             * We want the first flash (only flash audio extraction is currently supported)
+             * video with the highest audio quality.
+             * See the VideoFormat enum for more info about the quality.
+             */
+            video = videoInfos
+                .Where(info => info.CanExtractAudio)
+                .First(info =>
+                       info.VideoFormat == VideoFormat.FlashMp3HighQuality ||
+                       info.VideoFormat == VideoFormat.FlashMp3LowQuality);
+
+            worker.RunWorkerAsync(video);
+
+        }
+
+        private void worker_DoWork(object sender, DoWorkEventArgs e)
+        {
+            //Set the path to a temp directory on the desktop.
+            string folderpath = Environment.GetFolderPath(Environment.SpecialFolder.Desktop);
+            folderpath += "\\temp\\" + video.Title;
+            /*
+              * Create the audio downloader.
+              * The first argument is the video where the audio should be extracted from.
+              * The second argument is the path to save the audio file.
+              * Automatic video title infering will be supported later.
+              */
+            var audioDownloader = new AudioDownloader(video, folderpath + video.AudioExtension);
+            
+            // Register the ProgressChanged event and print the current progress
+            audioDownloader.ProgressChanged += (senders, args) => updatePercentage(args.ProgressPercentage);
+            
+            /*
+             * Execute the audio downloader.
+             * For GUI applications note, that this method runs synchronously.
+             */
+
+            audioDownloader.Execute();
+        }
+
+        public void updatePercentage(double percent)
+        {
+            //This function is required so that the worker can access the progress bar from the other thread.
+            int per = Convert.ToInt32(percent);
+            if (this.progressBar1.InvokeRequired)
+            {
+                updatePercentageCallback call = new updatePercentageCallback(updatePercentage);
+                this.Invoke(call, new object[] { per });
+            }
+            else
+            {
+                progressBar1.Value = per;
+                label5.Text = per.ToString() + "%";
+            }
+        }
+
+        private void worker_RunWorkerCompleted(object sender, RunWorkerCompletedEventArgs e)
+        {
+            //Display a dialog when the extraction is complete.
+            MessageBox.Show("MP3 file extracted!", "Complete", MessageBoxButtons.OK, MessageBoxIcon.Information);
         }
     }
 }
