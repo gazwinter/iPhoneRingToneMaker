@@ -239,10 +239,9 @@ namespace iPhoneRingtoneMaker
              * See the VideoFormat enum for more info about the quality.
              */
             video = videoInfos
-                .Where(info => info.CanExtractAudio)
-                .First(info =>
-                       info.VideoFormat == VideoFormat.FlashMp3HighQuality ||
-                       info.VideoFormat == VideoFormat.FlashMp3LowQuality);
+                .Where(info => info.CanExtractAudio && info.AudioType == AudioType.Mp3)
+                .OrderByDescending(info => info.AudioBitrate)
+                .First();
 
             worker.RunWorkerAsync(video);
 
@@ -252,15 +251,15 @@ namespace iPhoneRingtoneMaker
         {
             //Set the path to a temp directory on the desktop.
             string folderpath = Environment.GetFolderPath(Environment.SpecialFolder.Desktop);
-            folderpath += "\\temp\\" + video.Title;
+            folderpath += "\\temp\\";
             /*
               * Create the audio downloader.
               * The first argument is the video where the audio should be extracted from.
               * The second argument is the path to save the audio file.
               * Automatic video title infering will be supported later.
               */
-            var audioDownloader = new AudioDownloader(video, folderpath + video.AudioExtension);
-            
+            //var audioDownloader = new AudioDownloader(video, folderpath + video.AudioExtension);
+            var audioDownloader = new AudioDownloader(video, Path.Combine(folderpath, video.Title + video.AudioExtension));
             // Register the ProgressChanged event and print the current progress
             audioDownloader.ProgressChanged += (senders, args) => updatePercentage(args.ProgressPercentage);
             

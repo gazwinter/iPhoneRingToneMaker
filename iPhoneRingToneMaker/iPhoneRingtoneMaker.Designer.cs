@@ -42,6 +42,7 @@
             this.tabLayout = new System.Windows.Forms.TabControl();
             this.tabCreateRingtone = new System.Windows.Forms.TabPage();
             this.tabYouTubeMP3 = new System.Windows.Forms.TabPage();
+            this.textBox1 = new System.Windows.Forms.TextBox();
             this.label5 = new System.Windows.Forms.Label();
             this.progressBar1 = new System.Windows.Forms.ProgressBar();
             this.txtMP3Path = new System.Windows.Forms.TextBox();
@@ -50,7 +51,6 @@
             this.txtYouTubeURL = new System.Windows.Forms.TextBox();
             this.label4 = new System.Windows.Forms.Label();
             this.worker = new System.ComponentModel.BackgroundWorker();
-            this.textBox1 = new System.Windows.Forms.TextBox();
             this.tabLayout.SuspendLayout();
             this.tabCreateRingtone.SuspendLayout();
             this.tabYouTubeMP3.SuspendLayout();
@@ -204,6 +204,18 @@
             this.tabYouTubeMP3.Text = "YouTube to MP3";
             this.tabYouTubeMP3.UseVisualStyleBackColor = true;
             // 
+            // textBox1
+            // 
+            this.textBox1.Location = new System.Drawing.Point(104, 168);
+            this.textBox1.Multiline = true;
+            this.textBox1.Name = "textBox1";
+            this.textBox1.ReadOnly = true;
+            this.textBox1.Size = new System.Drawing.Size(256, 74);
+            this.textBox1.TabIndex = 7;
+            this.textBox1.Text = "Please note, once the MP3 file is created, you will need to edit its properties m" +
+    "anually at the moment. ie change the title and artist etc. This must be done bef" +
+    "ore you create a ringtone from the MP3.";
+            // 
             // label5
             // 
             this.label5.AutoSize = true;
@@ -270,18 +282,6 @@
             this.worker.DoWork += new System.ComponentModel.DoWorkEventHandler(this.worker_DoWork);
             this.worker.RunWorkerCompleted += new System.ComponentModel.RunWorkerCompletedEventHandler(this.worker_RunWorkerCompleted);
             // 
-            // textBox1
-            // 
-            this.textBox1.Location = new System.Drawing.Point(104, 168);
-            this.textBox1.Multiline = true;
-            this.textBox1.Name = "textBox1";
-            this.textBox1.ReadOnly = true;
-            this.textBox1.Size = new System.Drawing.Size(256, 74);
-            this.textBox1.TabIndex = 7;
-            this.textBox1.Text = "Please note, once the MP3 file is created, you will need to edit its properties m" +
-                "anually at the moment. ie change the title and artist etc. This must be done bef" +
-                "ore you create a ringtone from the MP3.";
-            // 
             // iPhoneRingtoneMaker
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
@@ -292,7 +292,7 @@
             this.Name = "iPhoneRingtoneMaker";
             this.StartPosition = System.Windows.Forms.FormStartPosition.CenterScreen;
             this.Text = "iPhoneRingtoneMaker";
-            this.TransparencyKey = System.Drawing.Color.White;
+            this.TransparencyKey = System.Drawing.Color.Pink;
             this.tabLayout.ResumeLayout(false);
             this.tabCreateRingtone.ResumeLayout(false);
             this.tabCreateRingtone.PerformLayout();
